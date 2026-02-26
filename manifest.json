@@ -37,6 +37,11 @@
   ],
   "content_scripts": [{
     "matches": ["*://*.leforem.be/*", "*://*.ictjob.be/*", "*://*.stepstone.be/*", "*://*.linkedin.com/jobs/*", "*://*.brusselsjobs.com/*", "*://*.indeed.com/*"],
+    "*://*.techjobs.be/*",
+    "*://*.indeed.com/*"
+  ],
+  "content_scripts": [{
+    "matches": ["*://*.leforem.be/*", "*://*.ictjob.be/*", "*://*.stepstone.be/*", "*://*.linkedin.com/jobs/*", "*://*.techjobs.be/*", "*://*.indeed.com/*"],
     "js": ["lib/utils.js", "lib/sites-config.js", "lib/routing.js", "content.js"],
     "run_at": "document_idle"
   }]
