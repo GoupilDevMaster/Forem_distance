@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Trajet Emploi",
   "version": "2.0",
-  "description": "Affiche automatiquement les temps de trajet sur les sites d'offres d'emploi (leforem.be, ictjob.be, stepstone.be, techjobs.be, linkedin.com, indeed.com)",
+  "description": "Affiche automatiquement les temps de trajet sur les sites d'offres d'emploi (leforem.be, ictjob.be, stepstone.be, techjobs.be, brusselsjobs.com, linkedin.com, indeed.com)",
   "homepage_url": "https://github.com/GoupilDevMaster/Forem_distance",
   "browser_action": {
     "default_popup": "popup.html",
@@ -32,6 +32,11 @@
     "*://*.ictjob.be/*",
     "*://*.stepstone.be/*",
     "*://*.linkedin.com/*",
+    "*://*.brusselsjobs.com/*",
+    "*://*.indeed.com/*"
+  ],
+  "content_scripts": [{
+    "matches": ["*://*.leforem.be/*", "*://*.ictjob.be/*", "*://*.stepstone.be/*", "*://*.linkedin.com/jobs/*", "*://*.brusselsjobs.com/*", "*://*.indeed.com/*"],
     "*://*.techjobs.be/*",
     "*://*.indeed.com/*"
   ],
