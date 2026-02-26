@@ -32,6 +32,11 @@
     "*://*.ictjob.be/*",
     "*://*.stepstone.be/*",
     "*://*.linkedin.com/*",
+    "*://*.jobat.be/*",
+    "*://*.indeed.com/*"
+  ],
+  "content_scripts": [{
+    "matches": ["*://*.leforem.be/*", "*://*.ictjob.be/*", "*://*.stepstone.be/*", "*://*.linkedin.com/jobs/*", "*://*.jobat.be/*", "*://*.indeed.com/*"],
     "*://*.brusselsjobs.com/*",
     "*://*.indeed.com/*"
   ],
