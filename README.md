@@ -11,6 +11,7 @@ Extension Firefox qui affiche automatiquement le temps de trajet et la distance 
 | [stepstone.be](https://www.stepstone.be/fr/) | ✅ Supporté |
 | [indeed.com](https://www.indeed.com) | ✅ Supporté |
 
+
 ## Fonctionnement
 
 1. Vous configurez votre ville de départ une seule fois via le popup de l'extension.
