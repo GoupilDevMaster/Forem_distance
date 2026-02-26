@@ -7,6 +7,7 @@ Extension Firefox qui affiche automatiquement le temps de trajet et la distance 
 | Site | Statut |
 |------|--------|
 | [leforem.be](https://www.leforem.be) | ✅ Supporté |
+| [ictjob.be](https://www.ictjob.be) | ✅ Supporté |
 | [indeed.com](https://www.indeed.com) | ✅ Supporté |
 
 ## Fonctionnement
