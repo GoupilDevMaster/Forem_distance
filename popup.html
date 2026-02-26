@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forem Distance</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Forem Distance</h1>
+
+    <div class="current-city">
+      <span class="current-city-label">Ville actuelle :</span>
+      <span id="current-city-name" class="current-city-value">Non configurée</span>
+    </div>
+
+    <div class="form-group">
+      <label for="city-from">Votre ville de départ</label>
+      <input
+        type="text"
+        id="city-from"
+        placeholder="ex : Liège"
+        autocomplete="off"
+      >
+    </div>
+
+    <button id="btn-save" class="btn-primary">Enregistrer</button>
+
+    <div id="spinner" class="spinner hidden" aria-label="Validation en cours...">
+      <div class="spinner-ring"></div>
+      <span>Validation en cours…</span>
+    </div>
+
+    <div id="feedback" class="feedback hidden"></div>
+
+    <p class="info-note">
+      Sur leforem.be, les temps de trajet s'affichent automatiquement à côté de chaque offre.
+    </p>
+
+    <div id="progress-section" class="progress-section hidden">
+      <span id="progress-text"></span>
+    </div>
+
+    <details id="advanced-options" class="advanced-panel">
+      <summary class="advanced-summary">Options avancées</summary>
+      <div class="advanced-content">
+
+        <div class="form-group">
+          <label for="routing-service">Service d'itinéraire</label>
+          <select id="routing-service">
+            <option value="osrm">OSRM — Gratuit, sans clé</option>
+            <option value="openrouteservice">OpenRouteService — Gratuit (500 req/j)</option>
+            <option value="here">HERE Routing — Gratuit (250k req/mois)</option>
+            <option value="google">Google Maps — Payant (crédit offert)</option>
+          </select>
+        </div>
+
+        <div id="api-key-group" class="form-group hidden">
+          <label for="api-key">Clé API</label>
+          <div class="api-key-row">
+            <input type="password" id="api-key" placeholder="Votre clé API" autocomplete="off">
+            <button id="btn-api-help" class="btn-help" type="button" title="Comment obtenir une clé ?">?</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="warn-threshold">Premier avertissement quota à partir de</label>
+          <select id="warn-threshold">
+            <option value="50">50% du quota (défaut)</option>
+            <option value="75">75% du quota</option>
+            <option value="90">90% du quota</option>
+            <option value="100">Quota épuisé seulement</option>
+          </select>
+        </div>
+
+        <button id="btn-save-advanced" class="btn-secondary">Enregistrer</button>
+        <div id="feedback-advanced" class="feedback hidden"></div>
+
+        <div id="usage-section" class="hidden">
+          <div class="gauge-label" id="gauge-service-label"></div>
+          <div class="gauge-wrapper">
+            <svg class="gauge-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle class="gauge-track" cx="50" cy="50" r="40"
+                fill="none" stroke-width="10"
+                stroke-dasharray="188.496 62.832"
+                transform="rotate(135, 50, 50)" />
+              <circle id="gauge-fill" cx="50" cy="50" r="40"
+                fill="none" stroke-width="10"
+                stroke-dasharray="0 251.327" stroke-linecap="round"
+                transform="rotate(135, 50, 50)" />
+            </svg>
+            <div class="gauge-center">
+              <span id="gauge-count-text">0 / 500</span>
+              <span id="gauge-pct-text">0%</span>
+              <span id="gauge-period-text">aujourd'hui</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
+    <div class="bug-report-section">
+      <div id="error-count-badge" class="error-count-badge hidden"></div>
+      <div class="bug-report-actions">
+        <button id="btn-bug-report" class="btn-bug-report">🐛 Signaler un bug</button>
+        <button id="btn-clear-errors" class="btn-clear-errors hidden" title="Effacer les logs">Effacer logs</button>
+      </div>
+      <p class="bug-report-hint">
+        Copie un rapport d'erreur et ouvre GitHub Issues.<br>Collez-le dans la description de l'issue.
+      </p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+  "name": "Forem Distance",
+  "version": "2.0",
+  "description": "Affiche automatiquement les temps de trajet sur leforem.be",
+  "homepage_url": "https://github.com/GoupilDevMaster/Forem_distance",
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Forem Distance",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "notifications",
+    "https://nominatim.openstreetmap.org/*",
+    "https://router.project-osrm.org/*",
+    "https://api.openrouteservice.org/*",
+    "https://router.hereapi.com/*",
+    "https://maps.googleapis.com/*",
+    "*://*.leforem.be/*"
+  ],
+  "content_scripts": [{
+    "matches": ["*://*.leforem.be/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }]
+}
