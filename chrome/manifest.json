@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Trajet Emploi",
+  "version": "2.0",
+  "description": "Affiche automatiquement les temps de trajet sur les sites d'offres d'emploi (leforem.be, ictjob.be, stepstone.be, techjobs.be, jobat.be, brusselsjobs.com, monster.be, linkedin.com, indeed.com)",
+  "homepage_url": "https://github.com/GoupilDevMaster/Forem_distance",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Trajet Emploi",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage",
+    "tabs",
+    "notifications"
+  ],
+  "host_permissions": [
+    "https://nominatim.openstreetmap.org/*",
+    "https://router.project-osrm.org/*",
+    "https://api.openrouteservice.org/*",
+    "https://router.hereapi.com/*",
+    "https://maps.googleapis.com/*",
+    "*://*.leforem.be/*",
+    "*://*.ictjob.be/*",
+    "*://*.stepstone.be/*",
+    "*://*.techjobs.be/*",
+    "*://*.linkedin.com/*",
+    "*://*.jobat.be/*",
+    "*://*.brusselsjobs.com/*",
+    "*://*.monster.be/*",
+    "*://*.indeed.com/*"
+  ],
+  "content_scripts": [{
+    "matches": [
+      "*://*.leforem.be/*",
+      "*://*.ictjob.be/*",
+      "*://*.stepstone.be/*",
+      "*://*.techjobs.be/*",
+      "*://*.linkedin.com/jobs/*",
+      "*://*.jobat.be/*",
+      "*://*.brusselsjobs.com/*",
+      "*://*.monster.be/*",
+      "*://*.indeed.com/*"
+    ],
+    "js": ["lib/utils.js", "lib/sites-config.js", "lib/routing.js", "content.js"],
+    "run_at": "document_idle"
+  }]
+}
