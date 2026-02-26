@@ -1,41 +1,5 @@
 "use strict";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
-const OSRM_URL      = "https://router.project-osrm.org/route/v1/driving";
-const RATE_LIMIT_MS = 1100; // >1 s between Nominatim requests (policy)
-
-const SITES = [
-  {
-    id: "forem",
-    urlPattern: /leforem\.be/,
-    selector: 'forem-formattedcard-list-element[icon="fal fa-map-marker-alt"]',
-    getValue(el) {
-      const attrVal = el.getAttribute("value");
-      if (attrVal && attrVal.trim()) return attrVal.trim();
-      const dd = el.querySelector("dd.refValue") || el.querySelector("dd");
-      return dd ? dd.textContent.trim() : null;
-    },
-    getTarget(el) {
-      return el.querySelector("dd.refValue") || el.querySelector("dd") || el;
-    },
-  },
-  {
-    id: "indeed",
-    urlPattern: /indeed\.com/,
-    selector: '[data-testid="text-location"]',
-    getValue(el) {
-      // Ex: "6040 Charleroi" ou "Travail hybride à 5101 Namur"
-      const raw = el.textContent.trim();
-      // Extraire après " à " si présent
-      const afterA = raw.match(/\bà\s+(.+)$/i);
-      if (afterA) return afterA[1].trim();
-      return raw || null;
-    },
-    getTarget(el) { return el; },
-  },
-];
 
 let currentSite = null;
 
@@ -56,16 +20,6 @@ async function logError(ctx, err, extra) {
   browser.runtime.sendMessage({ type: "errorLogged" }).catch(() => {});
 }
 
-function classifyError(err) {
-  if (!err || !err.message) return "Erreur inconnue";
-  const m = err.message.match(/\b(\d{3})\b/);
-  if (!m) return "Erreur réseau";
-  const code = parseInt(m[1]);
-  if (code === 401 || code === 403) return "Clé API invalide";
-  if (code === 429) return "Quota API dépassé";
-  if (code >= 500) return `Erreur serveur (${code})`;
-  return `Erreur HTTP ${code}`;
-}
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
@@ -144,18 +98,6 @@ let completedJobs = 0;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function formatDistance(meters) {
-  return (meters / 1000).toFixed(0) + " km";
-}
-
-function formatDuration(seconds) {
-  const totalMin = Math.round(seconds / 60);
-  const hours = Math.floor(totalMin / 60);
-  const mins = totalMin % 60;
-  if (hours === 0) return `${mins} min`;
-  if (mins === 0) return `${hours}h`;
-  return `${hours}h ${mins}min`;
-}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -193,14 +135,6 @@ async function geocodeWithFallback(rawValue) {
   return null;
 }
 
-async function getRouteOSRM(from, to) {
-  const coords = `${from.lon},${from.lat};${to.lon},${to.lat}`;
-  const response = await fetch(`${OSRM_URL}/${coords}?overview=false`);
-  if (!response.ok) throw new Error(`OSRM ${response.status}`);
-  const data = await response.json();
-  if (data.code !== "Ok" || !data.routes || data.routes.length === 0) return null;
-  return { distance: data.routes[0].distance, duration: data.routes[0].duration };
-}
 
 async function getRouteORS(from, to, key) {
   const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${key}&start=${from.lon},${from.lat}&end=${to.lon},${to.lat}`;

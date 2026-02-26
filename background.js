@@ -57,6 +57,10 @@ async function trackRequest(serviceId) {
   }).catch(() => {});
 }
 
-browser.runtime.onMessage.addListener((message) => {
-  if (message.type === "trackRequest") trackRequest(message.serviceId);
-});
+if (typeof browser !== "undefined") {
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.type === "trackRequest") trackRequest(message.serviceId);
+  });
+}
+
+if (typeof module !== "undefined") module.exports = { currentPeriodKey };

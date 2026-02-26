@@ -84,19 +84,6 @@ function showFeedback(message, type) {
   feedbackEl.classList.remove("hidden");
 }
 
-function formatDistance(meters) {
-  const km = meters / 1000;
-  return km.toFixed(0) + " km";
-}
-
-function formatDuration(seconds) {
-  const totalMin = Math.round(seconds / 60);
-  const hours = Math.floor(totalMin / 60);
-  const mins = totalMin % 60;
-  if (hours === 0) return `${mins} min`;
-  if (mins === 0) return `${hours}h`;
-  return `${hours}h ${mins}min`;
-}
 
 // --- Error logging ---
 
@@ -125,12 +112,6 @@ async function geocode(city) {
 
 // --- Advanced options: service selector ---
 
-function gaugeColor(pct) {
-  if (pct >= 90) return "#e74c3c";
-  if (pct >= 75) return "#e67e22";
-  if (pct >= 50) return "#f1c40f";
-  return "#27ae60";
-}
 
 function renderGauge(serviceId, counts) {
   const quota = QUOTAS[serviceId];
@@ -190,7 +171,7 @@ async function saveAdvanced() {
   showFeedbackAdv("Options enregistrées ✓", "success");
 
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
+  if (tabs.length > 0 && tabs[0].url && /leforem\.be|ictjob\.be|indeed\.com/.test(tabs[0].url)) {
     browser.tabs.sendMessage(tabs[0].id, { type: "refresh" }).catch(() => {});
   }
 }
@@ -238,7 +219,7 @@ async function saveCity() {
 
     // Notify active leforem.be tab to refresh badges
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
+    if (tabs.length > 0 && tabs[0].url && /leforem\.be|ictjob\.be|indeed\.com/.test(tabs[0].url)) {
       browser.tabs.sendMessage(tabs[0].id, { type: "refresh" }).catch(() => {
         // Tab may not have the content script loaded yet — ignore silently
       });
@@ -365,7 +346,7 @@ loadSavedCity();
 loadErrorReport();
 
 browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-  if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
+  if (tabs.length > 0 && tabs[0].url && /leforem\.be|ictjob\.be|indeed\.com/.test(tabs[0].url)) {
     browser.tabs.sendMessage(tabs[0].id, { type: "getProgress" })
       .then((r) => { if (r) updatePopupProgress(r.completed, r.total); })
       .catch(() => {});
