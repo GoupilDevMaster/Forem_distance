@@ -12,6 +12,7 @@ Extension Firefox qui affiche automatiquement le temps de trajet et la distance 
 | [jobat.be](https://www.jobat.be) | ✅ Supporté |
 | [brusselsjobs.com](https://www.brusselsjobs.com) | ✅ Supporté |
 | [techjobs.be](https://www.techjobs.be) | ✅ Supporté |
+| [monster.be](https://www.monster.be/fr/entreprises) | ✅ Supporté |
 | [linkedin.com/jobs](https://www.linkedin.com/jobs/) | ✅ Supporté |
 | [indeed.com](https://www.indeed.com) | ✅ Supporté |
 
