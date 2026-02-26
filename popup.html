@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forem Distance</title>
+  <title>Trajet Emploi</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
-    <h1 class="title">Forem Distance</h1>
+    <h1 class="title">Trajet Emploi</h1>
 
     <div class="current-city">
       <span class="current-city-label">Ville actuelle :</span>
@@ -35,7 +35,7 @@
     <div id="feedback" class="feedback hidden"></div>
 
     <p class="info-note">
-      Sur leforem.be, les temps de trajet s'affichent automatiquement à côté de chaque offre.
+      Sur leforem.be et indeed.com, les temps de trajet s'affichent automatiquement à côté de chaque offre.
     </p>
 
     <div id="progress-section" class="progress-section hidden">
@@ -64,7 +64,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="warn-threshold-group">
           <label for="warn-threshold">Premier avertissement quota à partir de</label>
           <select id="warn-threshold">
             <option value="50">50% du quota (défaut)</option>

@@ -47,7 +47,7 @@ async function trackRequest(serviceId) {
     browser.notifications.create({
       type: "basic",
       iconUrl: "icons/icon-48.png",
-      title: "Forem Distance — Quota API",
+      title: "Trajet Emploi — Quota API",
       message: msg,
     });
   }

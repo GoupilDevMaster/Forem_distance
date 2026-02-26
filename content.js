@@ -5,7 +5,39 @@
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const OSRM_URL      = "https://router.project-osrm.org/route/v1/driving";
 const RATE_LIMIT_MS = 1100; // >1 s between Nominatim requests (policy)
-const LOCATION_SELECTOR = 'forem-formattedcard-list-element[icon="fal fa-map-marker-alt"]';
+
+const SITES = [
+  {
+    id: "forem",
+    urlPattern: /leforem\.be/,
+    selector: 'forem-formattedcard-list-element[icon="fal fa-map-marker-alt"]',
+    getValue(el) {
+      const attrVal = el.getAttribute("value");
+      if (attrVal && attrVal.trim()) return attrVal.trim();
+      const dd = el.querySelector("dd.refValue") || el.querySelector("dd");
+      return dd ? dd.textContent.trim() : null;
+    },
+    getTarget(el) {
+      return el.querySelector("dd.refValue") || el.querySelector("dd") || el;
+    },
+  },
+  {
+    id: "indeed",
+    urlPattern: /indeed\.com/,
+    selector: '[data-testid="text-location"]',
+    getValue(el) {
+      // Ex: "6040 Charleroi" ou "Travail hybride à 5101 Namur"
+      const raw = el.textContent.trim();
+      // Extraire après " à " si présent
+      const afterA = raw.match(/\bà\s+(.+)$/i);
+      if (afterA) return afterA[1].trim();
+      return raw || null;
+    },
+    getTarget(el) { return el; },
+  },
+];
+
+let currentSite = null;
 
 // ─── Error logging ────────────────────────────────────────────────────────────
 
@@ -308,11 +340,7 @@ async function processQueue() {
 // ─── Badge injection ──────────────────────────────────────────────────────────
 
 function getLocationValue(el) {
-  // Try the attribute "value" first, then the text in dd.refValue
-  const attrVal = el.getAttribute("value");
-  if (attrVal && attrVal.trim()) return attrVal.trim();
-  const dd = el.querySelector("dd.refValue") || el.querySelector("dd");
-  return dd ? dd.textContent.trim() : null;
+  return currentSite.getValue(el);
 }
 
 function injectBadge(locationEl) {
@@ -323,7 +351,7 @@ function injectBadge(locationEl) {
   const cityName = getLocationValue(locationEl);
   if (!cityName) return;
 
-  const target = locationEl.querySelector("dd.refValue") || locationEl.querySelector("dd") || locationEl;
+  const target = currentSite.getTarget(locationEl);
 
   const badge = document.createElement("span");
   badge.className = "fdist-badge fdist-loading";
@@ -338,7 +366,7 @@ function injectBadge(locationEl) {
 
 function processNewElements(root) {
   if (!departure) return;
-  const elements = (root || document).querySelectorAll(LOCATION_SELECTOR);
+  const elements = (root || document).querySelectorAll(currentSite.selector);
   elements.forEach(injectBadge);
   processQueue();
 }
@@ -351,7 +379,7 @@ function showNoBanner() {
   const banner = document.createElement("div");
   banner.className = "fdist-banner";
   banner.id = "fdist-no-config-banner";
-  banner.textContent = "Configurez votre ville de départ dans l'extension Forem Distance pour voir les temps de trajet.";
+  banner.textContent = "Configurez votre ville de départ dans l'extension Trajet Emploi pour voir les temps de trajet.";
   document.body.insertBefore(banner, document.body.firstChild);
 }
 
@@ -370,11 +398,11 @@ function startObserver() {
       for (const node of mutation.addedNodes) {
         if (node.nodeType !== Node.ELEMENT_NODE) continue;
         // Check if the added node itself or its descendants match
-        if (node.matches && node.matches(LOCATION_SELECTOR)) {
+        if (node.matches && node.matches(currentSite.selector)) {
           injectBadge(node);
           processQueue();
         } else {
-          const found = node.querySelectorAll ? node.querySelectorAll(LOCATION_SELECTOR) : [];
+          const found = node.querySelectorAll ? node.querySelectorAll(currentSite.selector) : [];
           if (found.length > 0) {
             found.forEach(injectBadge);
             processQueue();
@@ -404,6 +432,9 @@ function resetAllBadges() {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 async function init() {
+  currentSite = SITES.find((s) => s.urlPattern.test(location.hostname)) || null;
+  if (!currentSite) return;
+
   const result = await browser.storage.local.get(["departure", "routingService"]);
   departure = result.departure || null;
   routingService = result.routingService || { id: "osrm", apiKey: "" };

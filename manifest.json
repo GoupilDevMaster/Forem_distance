@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Forem Distance",
+  "name": "Trajet Emploi",
   "version": "2.0",
-  "description": "Affiche automatiquement les temps de trajet sur leforem.be",
+  "description": "Affiche automatiquement les temps de trajet sur les sites d'offres d'emploi (leforem.be, indeed.com)",
   "homepage_url": "https://github.com/GoupilDevMaster/Forem_distance",
   "browser_action": {
     "default_popup": "popup.html",
@@ -28,10 +28,11 @@
     "https://api.openrouteservice.org/*",
     "https://router.hereapi.com/*",
     "https://maps.googleapis.com/*",
-    "*://*.leforem.be/*"
+    "*://*.leforem.be/*",
+    "*://*.indeed.com/*"
   ],
   "content_scripts": [{
-    "matches": ["*://*.leforem.be/*"],
+    "matches": ["*://*.leforem.be/*", "*://*.indeed.com/*"],
     "js": ["content.js"],
     "run_at": "document_idle"
   }]

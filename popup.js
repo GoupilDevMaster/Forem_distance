@@ -17,7 +17,8 @@ const inputApiKey   = document.getElementById("api-key");
 const btnApiHelp    = document.getElementById("btn-api-help");
 const btnSaveAdv      = document.getElementById("btn-save-advanced");
 const feedbackAdv     = document.getElementById("feedback-advanced");
-const selectWarnThreshold = document.getElementById("warn-threshold");
+const selectWarnThreshold  = document.getElementById("warn-threshold");
+const warnThresholdGroup   = document.getElementById("warn-threshold-group");
 
 const progressSection = document.getElementById("progress-section");
 const progressText    = document.getElementById("progress-text");
@@ -153,6 +154,7 @@ function onServiceChange(counts) {
   const service = selectService.value;
   if (service !== "osrm") {
     apiKeyGroup.classList.remove("hidden");
+    warnThresholdGroup.classList.remove("hidden");
     btnApiHelp.title = "Comment obtenir une clé " + selectService.options[selectService.selectedIndex].text.split(" —")[0] + " ?";
     if (counts !== undefined) {
       renderGauge(service, counts);
@@ -164,6 +166,7 @@ function onServiceChange(counts) {
   } else {
     apiKeyGroup.classList.add("hidden");
     usageSection.classList.add("hidden");
+    warnThresholdGroup.classList.add("hidden");
   }
 }
 
@@ -187,7 +190,7 @@ async function saveAdvanced() {
   showFeedbackAdv("Options enregistrées ✓", "success");
 
   const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-  if (tabs.length > 0 && tabs[0].url && tabs[0].url.includes("leforem.be")) {
+  if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
     browser.tabs.sendMessage(tabs[0].id, { type: "refresh" }).catch(() => {});
   }
 }
@@ -235,7 +238,7 @@ async function saveCity() {
 
     // Notify active leforem.be tab to refresh badges
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-    if (tabs.length > 0 && tabs[0].url && tabs[0].url.includes("leforem.be")) {
+    if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
       browser.tabs.sendMessage(tabs[0].id, { type: "refresh" }).catch(() => {
         // Tab may not have the content script loaded yet — ignore silently
       });
@@ -281,7 +284,7 @@ async function buildReportMarkdown() {
   const depCity   = dep ? dep.city : "Non configurée";
 
   const lines = [
-    `## Rapport automatique — Forem Distance v2.0`,
+    `## Rapport automatique — Trajet Emploi v2.0`,
     `**Date :** ${new Date().toUTCString()}`,
     `**Service :** ${svcLabel} (${apiKeyInfo})`,
     `**Ville de départ :** ${depCity}`,
@@ -362,7 +365,7 @@ loadSavedCity();
 loadErrorReport();
 
 browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-  if (tabs.length > 0 && tabs[0].url && tabs[0].url.includes("leforem.be")) {
+  if (tabs.length > 0 && tabs[0].url && /leforem\.be|indeed\.com/.test(tabs[0].url)) {
     browser.tabs.sendMessage(tabs[0].id, { type: "getProgress" })
       .then((r) => { if (r) updatePopupProgress(r.completed, r.total); })
       .catch(() => {});
