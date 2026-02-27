@@ -52,14 +52,30 @@ Cliquez sur l'icône de l'extension pour ouvrir le popup :
 
 Pour les services avec limite, l'extension suit votre consommation et vous notifie par seuils configurables (50 %, 75 %, 90 %, quota épuisé).
 
+## Installation Chrome
+
+1. Clonez ou téléchargez ce dépôt.
+2. Ouvrez Chrome et allez sur `chrome://extensions`.
+3. Activez le **mode développeur** (interrupteur en haut à droite).
+4. Cliquez sur **Charger l'extension non empaquetée**.
+5. Sélectionnez le dossier `chrome/` (port MV3, indépendant de la version Firefox).
+
 ## Architecture
 
 ```
-manifest.json      — Déclaration MV2, permissions, content script
-content.js         — Injection des badges, MutationObserver, appels API
+manifest.json      — Déclaration MV2, permissions, content script (Firefox)
+content.js         — Injection des badges, MutationObserver, appels API (Firefox)
 popup.html/css/js  — Interface de configuration et suivi de progression
-background.js      — Suivi des quotas API et notifications
+background.js      — Suivi des quotas API et notifications (Firefox)
 icons/             — Icônes 48×96 px (générées en Python)
+lib/               — Modules partagés (utils, sites-config, routing)
+chrome/            — Port MV3 pour Chrome (autonome, charger via chrome://extensions)
+  ├── manifest.json    — MV3 : action, service_worker, host_permissions
+  ├── background.js    — Service worker (chrome.* API)
+  ├── content.js       — chrome.* API + onMessage avec sendResponse
+  ├── popup.js         — chrome.* API
+  ├── lib/             — Copie des modules partagés
+  └── icons/           — Copie des icônes
 ```
 
 **Flux principal dans `content.js` :**
